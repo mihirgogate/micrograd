@@ -58,7 +58,7 @@ class Value:
         if abs(self.data) < EPSILON:
             self.data = EPSILON
             # raise Exception("Cant take ln of 0")
-        res = Value(math.log(self.data * 1.0), [self], label=f'ln({self.label})')
+        res = Value(math.log(self.data * 1.0), [self], 'ln', label=f'ln({self.label})')
         def _backward():
             self.grad += res.grad * (1 / self.data)
         res._backward = _backward
@@ -70,6 +70,24 @@ class Value:
         res = Value(val, [self], 'tanh', label=f'tanh({self.label})')
         def _backward():
             self.grad += res.grad * (1 - res.data * res.data)
+        res._backward = _backward
+        return res
+
+    def sigmoid(self):
+        val = 1 / (1 + math.exp(-self.data))
+        res = Value(val, [self], 'sigmoid', label=f'sigmoid({self.label})')
+        def _backward():
+            return 0
+
+        res._backward = _backward
+        return res
+
+    def relu(self):
+        val = max(0, self.data)
+        res = Value(val, [self], 'relu', label=f'relu({self.label})')
+        def _backward():
+            return 0
+
         res._backward = _backward
         return res
             
