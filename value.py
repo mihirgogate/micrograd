@@ -6,6 +6,8 @@ EPSILON = 1e-9
 class Value:
 
     def __init__(self, data, children=[], op='', label=''):
+        if isinstance(data, Value) or data.__class__ == Value:
+            raise Exception(f"{data} is already a Value object! with data {data.data}")
         if not label:
             raise Exception(f"Label missing for node with value {data}")
         self.data = data
