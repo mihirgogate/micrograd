@@ -149,6 +149,18 @@ class Value:
     
     def backward(self):
         self.grad = 1
-        ordered_nodes = self.topo_sort(self)
-        for node in ordered_nodes:
+
+        q = deque()
+        visited = set()
+
+        # start with the root
+        q.append(self)
+        visited.add(self)
+
+        while len(q) != 0:
+            node = q.popleft()
             node._backward()
+            for child in node.children:
+                if child not in visited:
+                    q.append(child)
+                    visited.add(child)

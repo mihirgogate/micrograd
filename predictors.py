@@ -10,10 +10,9 @@ class Neuron:
     def __call__(self, x):
         # w*x + b
         total = self.b
-        for index, (a, b) in enumerate(zip(self.w, x)):
-            b_val = Value(b, label=f'x{index}')
-            product = (b_val * a); 
-            addition = total + product;
+        for index, (wi, xi) in enumerate(zip(x, self.w)):
+            product = (xi * wi)
+            addition = total + product
             total = addition
         tanh = total.tanh()
         return tanh
@@ -44,7 +43,7 @@ class MLP:
         self.layers = [Layer(sz[i], sz[i + 1]) for i in range(len(sz) - 1)]
 
     def __call__(self, x):
-        for layer in self.layers:
+        for _index, layer in enumerate(self.layers):
             x = layer(x)
         return x
 
